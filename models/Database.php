@@ -100,6 +100,21 @@ class Database
     return false;
   }
 
+  //записать данные в таблицу
+  public function insert($table, $data=[])
+  {
+    $keys = array_keys($data);
+    $sql ="INSERT INTO $table (" . implode(',',$keys) . ") VALUES (:" . implode(',:',$keys) . ")";
+    $result = $this->pdo->prepare($sql);
+    $result->execute($data);
+  }
+
+  //обновить данные записи в таблице по id
+  public function update($table, $data=[], $id)
+  {
+ // пока завис  , чусвую что нужно использовать имеющиеся методы но не знаю как)))
+  }
+
   // гетер для ошибок error
   public function error()
   {
@@ -116,30 +131,6 @@ class Database
   public function count()
   {
     return $this->count;
-  }
-
-  //получить все записи из таблицы
-  public function getAll($table)
-  {
-
-  }
-
-  //получить одну запись из таблицы по id
-  public function getOne($table, $id)
-  {
-
-  }
-
-  //записать данные в таблицу
-  public function insert($table, $data)
-  {
-
-  }
-
-  //обновить данные записи в таблице по id
-  public function update($table, $data, $id)
-  {
-
   }
 
 
