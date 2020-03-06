@@ -2,9 +2,21 @@
 include_once 'models/Database.php';
 include_once 'models/functions.php';
 
-$new_db = new Database();
-$table = 'categories';
-$id = 1;
-//$new_db -> getAll($table);
-ash_debug($new_db -> getAll($table));
-ash_debug($new_db -> getOne($table, $id));
+//$users = Database::getInstance()->query(
+//    "SELECT * FROM users WHERE username IN (?, ?)",
+//    ['admin',
+//     'user2'
+//    ]
+//);
+
+$users = Database::getInstance()->get('users', ['password', '=', '123654789']);
+//$users = Database::getInstance()->delete('users', ['username', '=', 'user3']);
+
+if ($users->error()){
+  echo 'ERROR!!!';
+}else{
+  foreach ($users->results() as $user){
+    echo $user->username . '<br>';
+  }
+}
+
