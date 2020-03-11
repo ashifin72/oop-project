@@ -101,18 +101,40 @@ class Database
   }
 
   //записать данные в таблицу
-  public function insert($table, $data=[])
+  public function insert($table, $fields=[])
   {
-    $keys = array_keys($data);
-    $sql ="INSERT INTO $table (" . implode(',',$keys) . ") VALUES (:" . implode(',:',$keys) . ")";
-    $result = $this->pdo->prepare($sql);
-    $result->execute($data);
+    // получаем ключи массива в виде значений нового массива $keys
+    $keys = array_keys($fields);
+    $value='';
+    foreach ($fields as $field){
+      $value .= "?,";// дописываем ?, для каждого прохожденяи цикла
+    }
+    $val = rtrim($value, ','); // убираем крайнюю запятую спрва
+    $sql ="INSERT INTO {$table} (" . implode(',',$keys) . ") VALUES (". $val .")";
+    if (!$this->query($sql, $fields)->error()){
+      return true;// если нет ошибок выполняем
+    }
+    return false;
+
   }
 
   //обновить данные записи в таблице по id
-  public function update($table, $data=[], $id)
+  public function update($table, $id, $fields=[])
   {
- // пока завис  , чусвую что нужно использовать имеющиеся методы но не знаю как)))
+    // UPDATE users SET username=?, password=? WHERE id=2;
+    $set = '';
+    foreach ($fields as $key => $field){
+      $set .= "{$key} = ?,";
+    };
+
+    $set = rtrim($set, ',');
+    $sql= "UPDATE {$table} SET {$set} WHERE id={$id}";
+//    echo $sql;
+    if (!$this->query($sql, $fields)->error()){
+      return true;// если нет ошибок выполняем
+    }
+    return false;
+
   }
 
   // гетер для ошибок error
@@ -131,6 +153,11 @@ class Database
   public function count()
   {
     return $this->count;
+  }
+  // гетер для вывода первого пользователя (результата) по запросу
+  public function first()
+  {
+    return $this->results()[0];
   }
 
 

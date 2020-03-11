@@ -9,15 +9,22 @@ include_once 'models/functions.php';
 //    ]
 //);
 
-$users = Database::getInstance()->get('users', ['password', '=', '123654789']);
-//$users = Database::getInstance()->delete('users', ['username', '=', 'user3']);
+//$users = Database::getInstance()->get('users', ['password', '=', '123654789']);
+////$users = Database::getInstance()->delete('users', ['username', '=', 'user3']);
+//
+//if ($users->error()) {
+//  echo 'ERROR!!!';
+//} else {
+//  foreach ($users->results() as $user) {
+//    echo $user->username . '<br>';
+//  }
+//}
+//$id = 1;
+//Database::getInstance()->update('users', $id, [
+//    'username' => 'admin',
+//    'password' => '123456',
+//]);
 
-if ($users->error()) {
-  echo 'ERROR!!!';
-} else {
-  foreach ($users->results() as $user) {
-    echo $user->username . '<br>';
-  }
-}
-$user2 = Database::getInstance()->insert('users', ['username' => 'user3', 'password' => '123456']);
+$users = Database::getInstance()->get('users', ['username', '=', 'user']);
+echo $users->first()->password;
 
