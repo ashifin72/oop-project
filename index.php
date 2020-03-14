@@ -1,30 +1,56 @@
 <?php
 include_once 'models/Database.php';
 include_once 'models/functions.php';
+include_once 'models/Config.php';
+include_once 'models/Input.php';
+include_once 'models/Validate.php';
 
-//$users = Database::getInstance()->query(
-//    "SELECT * FROM users WHERE username IN (?, ?)",
-//    ['admin',
-//     'user2'
-//    ]
-//);
+if (Input::exiist()) {
+  $validate = new Validate();
+  $validation = $validate->check($_POST, [
+      'username' => [
+          'required' => true,
+          'min' => 2,
+          'max' => 15,
+          'unique' => 'users'
+      ],
+      'password' => [
+          'required' => true,
+          'min' => 2,
 
-//$users = Database::getInstance()->get('users', ['password', '=', '123654789']);
-////$users = Database::getInstance()->delete('users', ['username', '=', 'user3']);
-//
-//if ($users->error()) {
-//  echo 'ERROR!!!';
-//} else {
-//  foreach ($users->results() as $user) {
-//    echo $user->username . '<br>';
-//  }
-//}
-//$id = 1;
-//Database::getInstance()->update('users', $id, [
-//    'username' => 'admin',
-//    'password' => '123456',
-//]);
+      ],
+      'password_again' => [
+          'required' => true,
+          'matches' => 'password'
+      ]
 
-$users = Database::getInstance()->get('users', ['username', '=', 'user']);
-echo $users->first()->password;
+  ]);
+  if ($validation->passed()){
+    echo 'passed';
+  }else{
+    foreach ($validation->errors() as $error) {
+      echo $error . '<br>';
+
+    }
+  }
+}
+
+?>
+<form action="" method="post">
+  <div class="field">
+    <label for="username"> Username</label>
+    <input type="text" name="username" value="<?= Input::get('username') ?>">
+  </div>
+  <div class="field">
+    <label for="">Password</label>
+    <input type="text" name="password">
+  </div>
+  <div class="field">
+    <label for="">Password Again</label>
+    <input type="text" name="password_again">
+  </div>
+  <div class="field">
+    <button type="submit">Submit</button>
+  </div>
+</form>
 

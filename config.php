@@ -4,7 +4,7 @@
  * данные для конекта с БД
  */
 
-return [
+$GLOBALS['config'] = [
     'db' => [
         'host' => 'localhost',
         'dbname' => 'oop-project',
@@ -12,3 +12,4 @@ return [
         'password' => '',
     ]
 ];
+

@@ -5,7 +5,8 @@
  * Date: 05.03.2020
  * Time: 10:42
  */
-
+//include "../config.php";
+include_once  __DIR__ . '../../config.php';
 class Database
 {
   private static $instance = null;
@@ -15,11 +16,11 @@ class Database
   {
     // получаем массов с данными для соедения с дазой
     try {
-      $dbOptions = (require __DIR__ . '/config.php')['db'];
+
       $this->pdo = new PDO(
-          'mysql:host=' . $dbOptions['host'] . ';dbname=' . $dbOptions['dbname'],
-          $dbOptions['user'],
-          $dbOptions['password']
+          'mysql:host=' . Config::get('db.host') . ';dbname=' . Config::get('db.dbname'),
+          Config::get('db.user'),
+          Config::get('db.password')
       );
 
     } catch (PDOException $exception) {
