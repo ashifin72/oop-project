@@ -25,4 +25,14 @@ class Session
   {
     return $_SESSION[$name];
   }
+  public static function flash($name, $string='')
+  {// проверяем наличие сессии и чтоб она не была пустой и пишем в переменную
+    if (self::exists($name) && self::get($name)!== ''){
+      $session = self::get($name);
+      self::delete($name);
+      return $session;
+    }else{
+      self::put($name, $string);
+    }
+  }
 }

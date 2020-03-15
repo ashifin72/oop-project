@@ -8,9 +8,6 @@ include_once 'models/Validate.php';
 include_once 'models/Token.php';
 include_once 'models/Session.php';
 include_once 'models/User.php';
-include_once 'models/Redirect.php';
-
-
 
 if (Input::exiist())
   if (Token::check(Input::get('token'))) {
@@ -78,7 +75,7 @@ if (Input::exiist())
 <div class="container">
   <div class="row content">
     <div class="col-md-8">
-      Контент
+      ТЕСТ
       <a href="/"> Главная </a>
     </div>
     <div class="col-md-4">
