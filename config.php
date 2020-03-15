@@ -10,6 +10,9 @@ $GLOBALS['config'] = [
         'dbname' => 'oop-project',
         'user' => 'root',
         'password' => '',
+    ],
+    'session' => [
+        'token_name' => 'token',
     ]
 ];
 
