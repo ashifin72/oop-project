@@ -1,13 +1,5 @@
 <?php
-session_start();
-include_once 'models/Database.php';
-include_once 'models/functions.php';
-include_once 'models/Config.php';
-include_once 'models/Input.php';
-include_once 'models/Validate.php';
-include_once 'models/Token.php';
-include_once 'models/Session.php';
-include_once 'models/User.php';
+require_once 'init.php';
 
 if (Input::exiist())
   if (Token::check(Input::get('token'))) {
@@ -17,6 +9,11 @@ if (Input::exiist())
             'required' => true,
             'min' => 2,
             'max' => 15,
+
+        ],
+        'email' => [
+            'required' => true,
+            'email' => true,
             'unique' => 'users'
         ],
         'password' => [
@@ -35,6 +32,7 @@ if (Input::exiist())
 
       $user = new User();
       $user->create([
+          'email' => Input::get('email'),
           'username' => Input::get('username'),
           'password' => password_hash(Input::get('password'), PASSWORD_DEFAULT),
       ]);
@@ -48,37 +46,11 @@ if (Input::exiist())
   }
 
 ?>
-<!doctype html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <meta name="description" content="">
+<? include_once 'views/header.php' ?>
+  <div class="row content justify-content-center">
 
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <div class="col-md-6">
 
-  <!-- Template Basic Images Start -->
-  <meta property="og:image" content="path/to/image.jpg">
-  <link rel="icon" href="img/favicon/favicon.ico">
-  <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon-180x180.png">
-  <!-- Template Basic Images End -->
-
-  <!-- Custom Browsers Color Start -->
-  <meta name="theme-color" content="#000">
-  <!-- Custom Browsers Color End -->
-
-  <link rel="stylesheet" href="assets/css/main.min.css">
-
-  <title>Project OOP</title>
-</head>
-<body>
-<div class="container">
-  <div class="row content">
-    <div class="col-md-8">
-      ТЕСТ
-      <a href="/"> Главная </a>
-    </div>
-    <div class="col-md-4">
       <? if ($alert == 1): ?>
         <div class="alert alert-success" role="alert">
           <?= Session::flash('success'); ?>
@@ -94,7 +66,14 @@ if (Input::exiist())
         <div class="form-group">
           <label for="username"> Username</label>
 
-          <input type="text" class="form-control" name="username" value="<? if ($alert !== 1): echo Input::get('username'); endif;?>">
+          <input type="text" class="form-control" name="username"
+                 value="<? if ($alert !== 1): echo Input::get('username'); endif; ?>">
+        </div>
+        <div class="form-group">
+          <label for="username">Email</label>
+
+          <input type="text" class="form-control" name="email"
+                 value="<? if ($alert !== 1): echo Input::get('email'); endif; ?>">
         </div>
         <div class="form-group">
           <label for="">Password</label>
@@ -112,9 +91,4 @@ if (Input::exiist())
     </div>
   </div>
 
-</div>
-<script src="js/scripts.min.js"></script>
-</body>
-</html>
-
-
+<? include_once 'views/footer.php' ?>

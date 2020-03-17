@@ -47,6 +47,11 @@ class Validate
                 $this->addError("{$value} уже есть на сайте");
               }
               break;
+            case 'email':
+              if (!filter_var($value, FILTER_VALIDATE_EMAIL)){
+                $this->addError("{$value} не коректный email");
+              }
+              break;
           }
         }
       }
