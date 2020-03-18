@@ -1,13 +1,5 @@
 <?php
-session_start();
-include_once 'classes/Database.php';
-include_once 'classes/functions.php';
-include_once 'classes/Config.php';
-include_once 'classes/Input.php';
-include_once 'classes/Validate.php';
-include_once 'classes/Token.php';
-include_once 'classes/Session.php';
-include_once 'classes/User.php';
+include_once 'init.php';
 
 if (Input::exiist()) { // если поля заполненны
   if (Token::check(Input::get('token'))) { // токен верен
@@ -22,14 +14,16 @@ if (Input::exiist()) { // если поля заполненны
             'required' => true,
         ],
     ]);
-    $alert = ''; // добавляем переменную для вывода извещения
+
     if ($validate->passed()) {// если валидация пошла
       $user = new User();// создаем user  и проеряем на соответвие почты и пароля
-      $login = $user->login(Input::get('email'), Input::get('password'));
+      // загоняем в переменную значение отмечен true  или нет false remember
+      $remember = (Input::get('remember')) === 'on' ? true : false;
+      $login = $user->login(Input::get('email'), Input::get('password'), $remember);
       if ($login) {
-        $alert = 1;
+        Redirect::to('index.php');
       } else {
-        $alert = 2;
+
         $validate->addError('Ошибка авторизации!');
       }
     } else {
@@ -44,11 +38,7 @@ if (Input::exiist()) { // если поля заполненны
 <div class="row content justify-content-center">
 
   <div class="col-md-4">
-    <? if ($alert == 1): ?>
-      <div class="alert alert-success" role="alert">
-        Вы зашли!
-      </div>
-    <? elseif ($alert == 2) :
+    <? if ($validate):
       foreach ($validate->errors() as $error) {
         ?>
         <div class="alert alert-danger" role="alert">
@@ -68,6 +58,12 @@ if (Input::exiist()) { // если поля заполненны
       </div>
 
       <input type="hidden" name="token" value="<?= Token::generate(); ?>">
+      <div class="form-check">
+        <input class="form-check-input" name="remember" type="checkbox" id="remember" >
+        <label class="form-check-label" for="defaultCheck1">
+          Remember me
+        </label>
+      </div>
       <div class="field">
         <button type="submit" class="btn btn-primary">Submit</button>
       </div>
