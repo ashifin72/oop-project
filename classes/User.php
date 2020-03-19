@@ -103,4 +103,8 @@ class User
   {
     return Session::delete($this->session_name);
   }
+  public function exists()
+  {
+    return ($this->data) ? true : false;
+  }
 }
