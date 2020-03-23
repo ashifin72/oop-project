@@ -3,21 +3,19 @@
 
 class User
 {
-  private $db, $data, $session_name, $isLoggedIn;
+  private $db, $data, $session_name, $isLoggedIn, $cookieName;
 
   public function __construct($user = null)
   {
     $this->db = Database::getInstance();
     $this->session_name = Config::get('session.user_session');
+    $this->cookieName = Config::get('cookie.cookie_name');
     if (!$user) { //если данных нет то пишем из сесии id
       if (Session::exists($this->session_name)) {
         $user = Session::get($this->session_name);//id
         if ($this->find($user)) {// если пользователь залогинен записываем в isLoggedIn = true
           $this->isLoggedIn = true;
-        } else {
-          //logout
         }
-
       }
 
     } else {
@@ -57,18 +55,14 @@ class User
             }else{
               $hash = $hashCheck->first()->hash;
             }
-            Cookie::put(Config::get('cookie.cookie_name'), $hash, Config::get('cookie.cookie_expiry'));
+            Cookie::put($this->cookieName, $hash, Config::get('cookie.cookie_expiry'));
           }
-
-
           return true;
         }
       }
-
     }
     return false;
   }
-
   // получаем данные пользователя по email или  id
   public function find($value = null)
   {
@@ -77,14 +71,11 @@ class User
       $this->data = $this->db->get('users', ['id', '=', $value])->first();
     } else {
       $this->data = $this->db->get('users', ['email', '=', $value])->first();
-
     }
-
     if ($this->data) {
       return true;
     }
     return false;
-
   }
 
   //гетер для вывода data
@@ -101,10 +92,25 @@ class User
 
   public function logout()
   {
-    return Session::delete($this->session_name);
+    // удаляем запись из базы
+    $this->db->delete('user_sessions', ['user_id', '=', $this->data()->id]);
+    // удаляем сесию
+    Session::delete($this->session_name);
+    // удаляем куки
+    Cookie::delete($this->cookieName);
   }
+
+  // проверяем существует ли пользователь
   public function exists()
   {
-    return ($this->data) ? true : false;
+    return (!empty($this->data)) ? true : false;
+  }
+// обновляем пользователя
+  public function update($fields=[], $id = null)
+  {
+    if (!$id && $this->isLoggedIn()){// если нет id  и пользователь залогинен то берем id  этого пользователя
+      $id = $this->data()->id;
+    }
+    $this->db->update('users', $id, $fields);
   }
 }

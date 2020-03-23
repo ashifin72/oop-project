@@ -7,16 +7,8 @@ include_once 'views/header.php' ?>
 <div class="row content">
 
   <div class="col-md-8">
-    <?
-    //    $id = Session::get(Config::get('session.user_session'));
-    //     echo $id;
-    $user = new User();
-    //    $id=1;
-    //    $onUser = new User(1);
 
-    ;
-
-    ?>
+      <? echo Session::flash('success')?>
 
     <? if ($user->isLoggedIn()):
       ?>

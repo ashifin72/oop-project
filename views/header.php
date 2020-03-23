@@ -32,15 +32,28 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-          <a class="nav-link" href="index.php">Home <span class="sr-only">(current)</span></a>
+          <a class="nav-link" href="index.php">Home </a>
+        </li>
+        <? $user= new User();
+        if ($user->isLoggedIn()):?>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="update.php">Update <?=$user->data()->username ?></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="change_password.php">Update Password</a>
+        </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="logout.php">Exit</a>
+          </li>
+
+        <? else:?>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="login.php">Login</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="register.php">Register</a>
         </li>
-
-        <li class="nav-item">
-          <a class="nav-link disabled" href="login.php">Login</a>
-        </li>
+        <? endif; ?>
       </ul>
 
     </div>
